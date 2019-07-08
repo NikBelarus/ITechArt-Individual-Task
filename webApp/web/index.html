@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Directory</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/mustache.js"></script>
+    <script src="js/attachments.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/email.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/myModal.js"></script>
+    <script src="js/pagination.js"></script>
+    <script src="js/phones.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/showAndHide.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/history.js"></script>
+</head>
+<body onload="displayContacts(1)">
+<!--------index.html--------->
+<div id="indexPage">
+<div class="container">
+    <h1 class="display-4 mb-4">All Contacts</h1>
+    <!--------search.html--------->
+    <div id="searchPage" style="display: none">
+        <h1 class="mb-4" style="font-size: 18px">Search Contacts</h1>
+        <form>
+            <div class="row">
+                <div class="form-group">
+                    <label for="nameOfContact">Name</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" placeholder="Enter name" id="nameOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="surnameOfContact">Surname</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" placeholder="Enter surname" id="surnameOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="fnameOfContact">Fathers's name</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" id="fnameOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="bthOfContact">Birthdate</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" placeholder="YYYY-MM-DD" id="bthOfContactSearch" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                </div>
+                <!--больше-меньше-->
+                <div class="form-group">
+                    <label for="dirBirth">Less or more</label>
+                    <select class="form-control form-control-sm" id="dirBirth" required>
+                        <option selected>less</option>
+                        <option>more</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ctzOfContact">Citizenship</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" id="ctzOfContactSearch">
+                </div>
+                <div class="form-group mr-4">
+                    <label for="fstatOfContact">Family status</label>
+                    <select class="form-control form-control-sm" id="fstatOfContactSearch" required>
+                        <option selected>all</option>
+                        <option>married</option>
+                        <option>not married</option>
+                        <option>diverced</option>
+                    </select>
+                </div>
+                <!--пол-->
+                <div class="form-group">
+                    <label for="sex">Sex</label>
+                    <select class="form-control form-control-sm" id="sexSearch" required>
+                        <option selected>all</option>
+                        <option>man</option>
+                        <option>woman</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="countryOfContact">Country</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" id="countryOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="cityOfContact">City</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" id="cityOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="streetOfContact">Street</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" id="streetOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="homeOfContact">Home number</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" min="1" id="homeOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="appOfContact">Apartment</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" min="1" id="appOfContactSearch">
+                </div>
+                <div class="form-group">
+                    <label for="codeOfContact">Zipcode</label>
+                    <input class="form-control form-control-sm col-sm-10" type="text" id="codeOfContactSearch">
+                </div>
+            </div>
+        </form>
+        <button type="button" class="btn btn-outline-primary mr-4" style="margin-bottom: 15px" id="btnSearchContact">Search</button>
+        <button type="button" class="btn btn-outline-danger mr-4" style="margin-bottom: 15px" id="btnBackFromSearchPage">Back</button>
+    </div>
+    <div id="groupOfMainButtons">
+        <div class="d-flex" style="margin-bottom: 20px">
+            <button type="button" class="btn btn-outline-primary mr-4" id="btnAllContacts">All Contacts</button>
+            <button type="button" class="btn btn-outline-primary mr-4" id="btnNewContact">New Contact</button>
+            <button type="button" class="btn btn-outline-danger mr-4" id="btnDeleteContacts">Delete Contacts</button>
+            <button type="button" class="btn btn-outline-primary mr-4" id="btnSearchForm">Search Form</button>
+            <button type="button" class="btn btn-outline-primary mr-4" id="btnSendEmail">Send Email</button>
+        </div>
+    </div>
+    <div class="d-flex mr-4">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="mainChoose"></th>
+                <th>Name</th>
+                <th>Birthdate</th>
+                <th>Address</th>
+                <th>Company</th>
+            </tr>
+            </thead>
+            <tbody id="persons">
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+    <div id="pagination">
+    </div>
+    <div class="col-xs-3">
+    <select style="margin-left: 10px" class="form-control" id="paginationNum" required>
+        <option selected>5</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+    </select>
+    </div>
+    </div>
+</div>
+    <!---->
+    <div id="myDangerContactModal" class="modal">
+        <div class="modal-content">
+            <h5 class="display-4 mb-4">Confirmation</h5>
+            Are you sure you want to delete selected contacts?
+            <div style="margin-top: 10px">
+                <button type="button" class="btn btn-outline-danger" id="btnConfirmForDeleteContacts">Yes</button>
+                <button type="button" class="btn btn-outline-success" id="btnRejectForDeleteContacts">No</button>
+            </div>
+        </div>
+    </div>
+    <!---->
+</div>
+<!--------contact.html--------->
+<div id="contactPage" style="display: none">
+    <button type="button" class="btn btn-outline-danger mr-4" style="position: absolute; margin-top: 20px; margin-left: 70px" id="btnBackFromContactPage2">Back</button>
+<div class="container">
+    <h1 class="display-4 mb-4">Contact</h1>
+    <form>
+        <input type="hidden" id="hiddenIdOfContact">
+        <div class="row">
+            <div style="width: 250px; overflow: hidden; margin-right: 30px; margin-bottom: 10px">
+                <img style="height: 270px" id="contactPhoto">
+                <input type="file" id="uploadPhoto" accept=".jpg, .jpeg, .png" style="display: none">
+            </div>
+            <div>
+                <div class="row">
+                    <div class="form-group mr-4">
+                        <label for="nameOfContact">Name*</label>
+                        <input class="form-control" type="text" placeholder="Enter name" id="nameOfContact" required>
+                    </div>
+                    <div class="form-group mr-4">
+                        <label for="surnameOfContact">Surname*</label>
+                        <input class="form-control" type="text" placeholder="Enter surname" id="surnameOfContact" required>
+                    </div>
+                    <div class="form-group mr-4">
+                        <label for="fnameOfContact">Fathers's name*</label>
+                        <input class="form-control" type="text" id="fnameOfContact" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group mr-4">
+                        <label for="bthOfContact">Birthdate*</label>
+                        <input class="form-control" type="text" placeholder="YYYY-MM-DD" id="bthOfContact" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                    </div>
+                    <div class="form-group">
+                        <label for="sex">Sex*</label>
+                        <select class="form-control" id="sex" required>
+                            <option selected>man</option>
+                            <option>woman</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group mr-4">
+                        <label for="ctzOfContact">Citizenship*</label>
+                        <input class="form-control" type="text" id="ctzOfContact" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fstatOfContact">Family status*</label>
+                        <select class="form-control" id="fstatOfContact" required>
+                            <option>married</option>
+                            <option selected>not married</option>
+                            <option>diverced</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---->
+        <div class="row">
+            <div class="form-group mr-4">
+                <label for="siteOfContact">Web site*</label>
+                <input class="form-control" type="text" id="siteOfContact" required>
+            </div>
+            <div class="form-group mr-4">
+                <label for="emOfContact">Email*</label>
+                <input class="form-control" type="email" id="emOfContact" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group mr-4">
+                <label for="workOfContact">Current workspace*</label>
+                <input class="form-control" type="text" id="workOfContact" required>
+            </div>
+        </div>
+        <h3 class="display-4 mb-4">Address</h3>
+        <div class="row">
+            <div class="form-group mr-4">
+                <label for="countryOfContact">Country*</label>
+                <input class="form-control" type="text" id="countryOfContact" required>
+            </div>
+            <div class="form-group mr-4">
+                <label for="cityOfContact">City*</label>
+                <input class="form-control" type="text" id="cityOfContact" required>
+            </div>
+            <div class="form-group mr-4">
+                <label for="streetOfContact">Street*</label>
+                <input class="form-control" type="text" id="streetOfContact" required>
+            </div>
+            <div class="form-group mr-4">
+                <label for="homeOfContact">Home number*</label>
+                <input class="form-control" type="text" id="homeOfContact" required>
+            </div>
+            <div class="form-group mr-4">
+                <label for="appOfContact">Apartment</label>
+                <input class="form-control" type="text" id="appOfContact">
+            </div>
+            <div class="form-group mr-4">
+                <label for="codeOfContact">Zipcode*</label>
+                <input class="form-control" type="text" id="codeOfContact" required>
+            </div>
+        </div>
+    </form>
+    <h1 class="display-4 mb-4">Table Phones</h1>
+    <div class="d-flex">
+        <table class="table" id="tablePhones">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Number</th>
+                <th>Type</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody id="phones">
+            </tbody>
+        </table>
+    </div>
+    <button type="button" class="btn btn-outline-danger mr-4" id="btnDeletePhones">Delete phones</button>
+    <button type="button" class="btn btn-outline-success mr-4" id="btnCreatePhone">Create phone</button>
+    <!---->
+    <h1 class="display-4 mb-4">Attachments</h1>
+    <div class="d-flex">
+        <table class="table" id="attachmentsTable">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Comment</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="attachmentsBody">
+            </tbody>
+        </table>
+    </div>
+    <button type="button" class="btn btn-outline-danger mr-4" id="btnDeleteAttachments">Delete attachments</button>
+    <button type="button" class="btn btn-outline-success mr-4" id="btnAddAttachments">Add attachment</button>
+    <!---->
+    <div class="d-flex" style="margin-top: 15px">
+        <button type="button" class="btn btn-outline-primary mr-4" id="btnSaveAll">Save all</button>
+        <button type="button" class="btn btn-outline-danger mr-4" id="btnBackFromContactPage">Back</button>
+    </div>
+
+    <iframe name="myIFR" style="display: none"></iframe>
+    <form target="myIFR" id="formOfContact" class="formOfContact" enctype="multipart/form-data">
+        <input type="hidden" id="contact" name="contact">
+    </form>
+
+    <form method="post" target="myIFR" action="api/attachment">
+        <input type="hidden" id="attachmentId" name="attachmentId">
+        <input type="submit" style="display: none" id="submitDownload">
+    </form>
+</div>
+<!--Модальные окна-->
+<div id="myAttachModal" class="modal">
+    <div class="modal-content">
+        <h5 class="display-4 mb-4">Create/Edit Attachment</h5>
+        <form id="addAttachmentForm">
+            <div class="row">
+                <input type="hidden" id="checkAttachID" value="not">
+                <div class="form-group mr-4">
+                    <label for="attach">Attachment</label>
+                    <input class="form-control" type="file" id="attach" required>
+                </div>
+                <div class="form-group mr-4">
+                    <label for="commentOfAttach">Comment</label>
+                    <input class="form-control" type="text" id="commentOfAttach">
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-danger" id="btnCancelForAttachment">Cancel</button>
+            <button type="button" class="btn btn-outline-success" id="btnSaveForAttachment">Save</button>
+        </form>
+    </div>
+</div>
+<div id="myPhoneModal" class="modal">
+    <div class="modal-content">
+        <h5 class="display-4 mb-4">Create/Edit Phone</h5>
+        <form>
+            <div class="row">
+                <input type="hidden" id="checkID" value="not">
+                <div class="form-group mr-4">
+                    <label for="countryCode">Country code*</label>
+                    <input class="form-control" type="number" id="countryCode" required>
+                </div>
+                <div class="form-group mr-4">
+                    <label for="operatorCode">Operator code*</label>
+                    <input class="form-control" type="number" id="operatorCode" required>
+                </div>
+                <div class="form-group mr-4">
+                    <label for="number">Number*</label>
+                    <input class="form-control" type="text" id="number" required pattern="[0-9]{7}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mr-4">
+                    <label for="typeOfPhone">Type*</label>
+                    <select class="form-control" id="typeOfPhone" required>
+                        <option selected>mobile</option>
+                        <option>home number</option>
+                    </select>
+                </div>
+                <div class="form-group mr-4">
+                    <label for="comment">Comment</label>
+                    <input class="form-control" type="text" id="comment">
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-danger" id="btnCancelForPhone">Cancel</button>
+            <button type="button" class="btn btn-outline-success" id="btnSaveForPhone">Save</button>
+        </form>
+    </div>
+</div>
+    <!---->
+<div id="myDangerPhoneModal" class="modal">
+    <div class="modal-content">
+        <h5 class="display-4 mb-4">Confirmation</h5>
+        Are you sure you want to delete selected phone numbers?
+        <div style="margin-top: 10px">
+            <button type="button" class="btn btn-outline-danger" id="btnConfirmForDeletePhones">Yes</button>
+            <button type="button" class="btn btn-outline-success" id="btnRejectForDeletePhones">No</button>
+        </div>
+    </div>
+</div>
+    <!---->
+    <div id="myDangerAttachModal" class="modal">
+        <div class="modal-content">
+            <h5 class="display-4 mb-4">Confirmation</h5>
+            Are you sure you want to delete selected attachments?
+            <div style="margin-top: 10px">
+                <button type="button" class="btn btn-outline-danger" id="btnConfirmForDeleteAttachments">Yes</button>
+                <button type="button" class="btn btn-outline-success" id="btnRejectForDeleteAttachments">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--------email.html--------->
+<div id="emailPage" style="display: none">
+    <div class="container">
+        <h1 class="display-4 mb-4">Send Email</h1>
+        <form>
+            <div class="row">
+                <div class="form-group mr-4">
+                    <label for="emBody">Recipients</label>
+                    <textarea class="form-control" rows="5" cols="45" id="recipients" disabled></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mr-4">
+                    <label for="emHead">Subject*</label>
+                    <input class="form-control" type="text" placeholder="Enter header" id="emHead" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="template">Template</label>
+                    <select class="form-control" id="template">
+                        <option selected disabled hidden>Choose template</option>
+                        <option>Greeting</option>
+                        <option>Invitation</option>
+                        <option>Notification</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mr-4">
+                    <label for="emBody">Text</label>
+                    <textarea class="form-control" rows="5" cols="45" id="emBody"></textarea>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary mr-4" id="btnSendEmailForContacts">Send</button>
+            <button type="button" class="btn btn-outline-danger mr-4" id="btnBackFromEmailPage">Back</button>
+        </form>
+    </div>
+</div>
+<div id="myInputWarning" class="modal">
+    <div class="modal-content">
+        <div id="infoHead">
+        </div>
+        <div id="infoBody">
+        </div>
+        <div style="margin-top: 10px">
+            <button type="button" class="btn btn-outline-danger" id="btnOkForWarningContact">Ok</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
